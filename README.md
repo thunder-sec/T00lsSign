@@ -71,7 +71,9 @@ pushType = ""       # 选择推送方式，目前支持：bark、dingding
 
 **1.云函数配置**
 
-使用的某讯云函数，注册好之后，创建云函数—>从头开始—>事件函数—>**运行环境选择python3.6**—>**执行方法处写** `index.main` 。
+* 使用的某讯云函数，注册好之后，创建云函数—>从头开始—>事件函数—>**运行环境选择python3.6**—>**执行方法处写** `index.main` 。
+
+* 高级配置中，将**超时时间设置为最长900s**。
 
 ![yun](https://github.com/thunder-sec/T00lsSign/blob/main/yunhanshu.jpg?raw=true)
 
