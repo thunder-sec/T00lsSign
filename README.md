@@ -63,7 +63,7 @@ pushType = ""       # 选择推送方式，目前支持：bark、dingding
 
   ```
   # dingding data
-  dingkey = ""        # webhook key值
+  access_token = ""        # webhook access_token值
   secret = ""         # 安全选项选"加签"，secret值
   ```
 
