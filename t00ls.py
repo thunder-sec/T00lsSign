@@ -37,7 +37,7 @@ bark_server_url = ""    # 示例：https://test.com
 bark_key = ""           # 从bark app上获取
 
 # dingding data
-dingkey = ""        # webhook key值
+access_token = ""        # webhook access_token值
 secret = ""         # 安全选项选"加签"，secret值
 
 # 请求参数
@@ -166,7 +166,7 @@ def dingding_push(message):
     sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
     data = {"msgtype": "text", "text": {"content": message}}
     headers = {"Content-Type": "application/json;charset=utf-8"}
-    dingurl = f"https://oapi.dingtalk.com/robot/send?access_token={dingkey}&timestamp={timestamp}&sign={sign}"
+    dingurl = f"https://oapi.dingtalk.com/robot/send?access_token={access_token}&timestamp={timestamp}&sign={sign}"
     requests.post(url=dingurl, headers=headers, json=data)
 
 
