@@ -89,16 +89,19 @@ def t00ls_sign(t00ls_hash):
 
 # 获取域名列表
 def getDomain():
-    domain_data = []
+    getdomain_data = {"terraceFlag": 3, "pageNum": random.randint(1, 10), "pageSize": 50,
+                      "include": {"name": "", "includeStart": "false", "includeEnd": "false"},
+                      "exclude": {"name": "", "excludeStart": "false", "excludeEnd": "false"},
+                      "minSuffixLength": random.randint(3, 8), "maxSuffixLength": "",
+                      "deleteTime": str(datetime.date.today()),
+                      "isIDN": "false", "myself": "false", "sidx": "delete_time", "order": "asc"}
     headers_getDomain = headers.copy()
-    sign_text = requests.get("http://www.juming.com/6/", headers=headers_getDomain).text
-    sign = re.search("sign='(.+?)'", sign_text).group(1)
-    headers_getDomain["Content-Type"] = "application/x-www-form-urlencoded"
-    data_getDomain = f"zairushezhi=0&ymgc=0&ymcd_1={random.randint(5, 10)}&ymcd_2=0&ymhzfs=3&ymhz=com%2Cnet&tsym=0&pr_1=0&pr_2=0&bdsl_1=0&bdfl_1=0&scsj={datetime.datetime.today()}&mysc=0&jgpx=0&uid=0&ishy=0&isdl=0&isxz=1&sign={sign}&page=1"
-    url_getDomain = "http://7a08c112cda6a063.juming.com:9696/api/ydlist"
-    rep_jsondata = json.loads(requests.post(url=url_getDomain, data=data_getDomain, headers=headers_getDomain).text)
+    headers_getDomain["Content-Type"] = "application/json;charset=UTF-8"
+    url_getDomain = "https://ym.longming.com/list/pre"
+    rep_jsondata = json.loads(requests.post(url=url_getDomain, headers=headers_getDomain, json=getdomain_data).text)
+    domain_data = []
     for i in range(50):
-        domain_data.append(rep_jsondata["data"][i]["ym"])
+        domain_data.append(rep_jsondata["data"]["list"][i]["domain"])
     return domain_data
 
 
