@@ -93,7 +93,7 @@ def getDomain():
                       "include": {"name": "", "includeStart": "false", "includeEnd": "false"},
                       "exclude": {"name": "", "excludeStart": "false", "excludeEnd": "false"},
                       "minSuffixLength": random.randint(3, 8), "maxSuffixLength": "",
-                      "deleteTime": str(datetime.date.today()),
+                      "deleteTime": str(datetime.date.today() + datetime.timedelta(days=1)),
                       "isIDN": "false", "myself": "false", "sidx": "delete_time", "order": "asc"}
     headers_getDomain = headers.copy()
     headers_getDomain["Content-Type"] = "application/json;charset=UTF-8"
