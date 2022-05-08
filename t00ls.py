@@ -89,10 +89,10 @@ def t00ls_sign(t00ls_hash):
 
 # 获取域名列表
 def getDomain():
-    getdomain_data = {"terraceFlag": 3, "pageNum": random.randint(1, 10), "pageSize": 50,
+    getdomain_data = {"terraceFlag": 3, "pageNum": random.randint(1, 5), "pageSize": 50,
                       "include": {"name": "", "includeStart": "false", "includeEnd": "false"},
                       "exclude": {"name": "", "excludeStart": "false", "excludeEnd": "false"},
-                      "minSuffixLength": random.randint(3, 8), "maxSuffixLength": "",
+                      "minSuffixLength": random.randint(5, 10), "maxSuffixLength": "",
                       "deleteTime": str(datetime.date.today() + datetime.timedelta(days=1)),
                       "isIDN": "false", "myself": "false", "sidx": "delete_time", "order": "asc"}
     headers_getDomain = headers.copy()
@@ -141,7 +141,9 @@ def searchDomain(formhash, domain_data, seccode):
     elif "验证码不正确" in response_domain:
         print("验证码不正确")
         search_message = "验证码不正确"
-    elif random_domain in response_domain:
+    elif "域名不存在或借口有误" in response_domain
+        print("接口错误或者域名不存在")
+    elif random_domain in response_domain and "域名不存在或借口有误" not in response_domain:
         print("查询成功，但是没有增加TuBi")
         search_message = "查询成功，但是没有增加TuBi"
     else:
@@ -155,7 +157,7 @@ def bark_push(message):
     data = {"title": "t00ls签到", "body": message}
     headers = {"Content-Type": "application/json;charset=utf-8"}
     url = f"{bark_server_url}/{bark_key}/?isArchive=1"
-    ret = requests.post(url, json=data, headers=headers)
+    ret = requests.post(url, json=data, headers=headers, timeout=60)
     print("Bark: " + ret.text)
 
 
@@ -170,7 +172,7 @@ def dingding_push(message):
     data = {"msgtype": "text", "text": {"content": message}}
     headers = {"Content-Type": "application/json;charset=utf-8"}
     dingurl = f"https://oapi.dingtalk.com/robot/send?access_token={access_token}&timestamp={timestamp}&sign={sign}"
-    requests.post(url=dingurl, headers=headers, json=data)
+    requests.post(url=dingurl, headers=headers, json=data, timeout=60)
 
 
 # 推送函数
