@@ -58,9 +58,9 @@ def t00ls_login(u_name, u_pass, q_num, q_ans):
         'answer': q_ans
     }
     response_login = sess.post(
-        'https://www.t00ls.cc/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1', data=login_data,
+        'https://www.t00ls.com/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1', data=login_data,
         headers=headers)
-    response_member = sess.get("https://www.t00ls.cc/checklogin.html", headers=headers)
+    response_member = sess.get("https://www.t00ls.com/checklogin.html", headers=headers)
     findformhash = re.search('formhash=(.+)"', response_member.text)
     formhash = findformhash.group(1)
     if formhash:
@@ -73,7 +73,7 @@ def t00ls_login(u_name, u_pass, q_num, q_ans):
 # 签到函数
 def t00ls_sign(t00ls_hash):
     sign_data = {'formhash': t00ls_hash, 'signsubmit': "apply"}
-    response_sign = sess.post('https://www.t00ls.cc/ajax-sign.json', data=sign_data, headers=headers)
+    response_sign = sess.post('https://www.t00ls.com/ajax-sign.json', data=sign_data, headers=headers)
     response_json = json.loads(response_sign.text)
     if response_json['status'] == 'success':
         print('签到成功过')
@@ -107,9 +107,9 @@ def getDomain():
 
 # 获取验证码并解析
 def getSeccode():
-    url_getcode = f"https://www.t00ls.cc/seccode.php?update={random.randint(1000, 9999)}"
+    url_getcode = f"https://www.t00ls.com/seccode.php?update={random.randint(1000, 9999)}"
     headersCode = headers.copy()
-    headersCode["Referer"] = "https://www.t00ls.cc/domain.html"
+    headersCode["Referer"] = "https://www.t00ls.com/domain.html"
     response_code = sess.get(url=url_getcode, headers=headersCode)
     code_img = base64.b64encode(response_code.content)
     b64 = code_img.decode()
@@ -129,7 +129,7 @@ def getSeccode():
 
 # 查询域名
 def searchDomain(formhash, domain_data, seccode):
-    domain_url = "https://www.t00ls.cc/domain.html"
+    domain_url = "https://www.t00ls.com/domain.html"
     headersDomain = headers.copy()
     headersDomain["Content-Type"] = "application/x-www-form-urlencoded"
     random_domain = random.choice(domain_data)
