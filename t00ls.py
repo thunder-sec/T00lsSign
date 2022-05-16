@@ -141,7 +141,7 @@ def searchDomain(formhash, domain_data, seccode):
     elif "验证码不正确" in response_domain:
         print("验证码不正确")
         search_message = "验证码不正确"
-    elif "域名不存在或借口有误" in response_domain
+    elif "域名不存在或借口有误" in response_domain:
         print("接口错误或者域名不存在")
     elif random_domain in response_domain and "域名不存在或借口有误" not in response_domain:
         print("查询成功，但是没有增加TuBi")
