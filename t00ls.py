@@ -76,7 +76,7 @@ def t00ls_sign(t00ls_hash):
     response_sign = sess.post('https://www.t00ls.com/ajax-sign.json', data=sign_data, headers=headers)
     response_json = json.loads(response_sign.text)
     if response_json['status'] == 'success':
-        print('签到成功过')
+        print('签到成功')
         sign_message = '签到成功，Tubi + 1！'
     elif response_json['message'] == 'alreadysign':
         print('已经签过到了')
