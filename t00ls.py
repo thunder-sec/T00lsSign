@@ -57,7 +57,7 @@ def t00ls_login(u_name, u_pass, q_num, q_ans):
         'questionid': q_num,
         'answer': q_ans
     }
-    response_login = sess.post(
+    sess.post(
         'https://www.t00ls.com/logging.php?action=login&loginsubmit=yes&floatlogin=yes&inajax=1', data=login_data,
         headers=headers)
     response_member = sess.get("https://www.t00ls.com/checklogin.html", headers=headers)
