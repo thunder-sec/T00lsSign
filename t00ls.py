@@ -8,6 +8,7 @@ import time
 import re
 import urllib
 import requests
+from bs4 import BeautifulSoup
 
 # 登录信息
 username = ""           # 用户名
@@ -77,7 +78,7 @@ def t00ls_sign(t00ls_hash):
     response_json = json.loads(response_sign.text)
     if response_json['status'] == 'success':
         print('签到成功')
-        sign_message = '签到成功，Tubi + 1！'
+        sign_message = '签到成功!'
     elif response_json['message'] == 'alreadysign':
         print('已经签过到了')
         sign_message = '已经签到过了'
@@ -102,6 +103,7 @@ def getDomain():
     domain_data = []
     for i in range(50):
         domain_data.append(rep_jsondata["data"]["list"][i]["domain"])
+    print("域名列表获取成功！")
     return domain_data
 
 
@@ -119,6 +121,7 @@ def getSeccode():
         url_TT = "http://api.ttshitu.com/predict"
         result = json.loads(requests.post(url=url_TT, json=TT_data, timeout=30).text)
         if result["success"]:
+            print("验证码解析成功！")
             return result["data"]["result"]
         else:
             print("识别失败")
@@ -128,7 +131,9 @@ def getSeccode():
 
 
 # 查询域名
+search_message = ""
 def searchDomain(formhash, domain_data, seccode):
+    global search_message
     domain_url = "https://www.t00ls.com/domain.html"
     headersDomain = headers.copy()
     headersDomain["Content-Type"] = "application/x-www-form-urlencoded"
@@ -150,6 +155,22 @@ def searchDomain(formhash, domain_data, seccode):
         print("查询失败")
         search_message = "查询失败"
     return search_message
+
+# 获取Tubilog
+def get_tubilog():
+    tubilog = sess.get("https://www.t00ls.com/members-tubilog-15186.html",headers=headers).text
+    soup = BeautifulSoup(tubilog, 'html.parser')
+    tubilist = soup.tbody
+    trs = tubilist.find_all("tr")
+    for tr in trs:
+        date = tr.find_all("td")[1].text
+        domainlog = tr.find_all("td")[4].text
+        if str(datetime.date.today()) in date and "查询新域名" in domainlog:
+            domaindata = True
+            break
+        else:
+            domaindata = False
+    return domaindata
 
 
 # bark_push
@@ -184,6 +205,7 @@ def push(message):
 
 
 def main(event, content):
+    global search_message
     response_login = t00ls_login(username, password, question_num, question_answer)
     if response_login:
         sign_message = t00ls_sign(response_login)
@@ -196,6 +218,11 @@ def main(event, content):
         while seccode_num < 5:
             search_message = searchDomain(response_login, domain_data, seccode)
             if "查询域名成功" in search_message:
+                if pushServer == 1:
+                    push(search_message)
+                seccode_num = 5
+            elif get_tubilog():
+                message = "今日已经查询过域名，Tubi已经+1～"
                 if pushServer == 1:
                     push(search_message)
                 seccode_num = 5
