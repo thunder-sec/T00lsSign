@@ -6,5 +6,5 @@ def handler(event, content):
     core()
 
 # 如果本地自行运行，将如下两行去除注释，从而手动执行脚本
-if __name__ == '__main__':
-    core()
+# if __name__ == '__main__':
+#     core()
