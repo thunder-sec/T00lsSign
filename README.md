@@ -4,10 +4,10 @@ T00ls自动签到、查域名脚本(搭配云函数使用)
 
 ## 使用说明
 
-**1.登录信息修改**
+**1.config.conf配置文件**
 
 ```
-# 登录信息
+[login]
 username = ""           # 用户名
 password = ""           # 密码，md5 32位小写
 question_num = ""       # 密保问题
@@ -29,22 +29,24 @@ question_answer = ""    # 密保答案
 
 **2.打码平台信息修改**
 
-* 如下使用的是图鉴识别 www.ttshitu.com ，注册用户，小额充值，填入用户名和密码即可，一次识别0.008元。
+* 如下使用的是anti-captcha识别 https://anti-captcha.com/ ，注册用户，可以用加密货币小额充值，填入获取到的clientKey，1000次识别2美刀。
 
 ```
-# 图鉴识别登录 www.ttshitu.com
-TTusername = ""
-TTpassword = ""
+[anti-captcha]
+clientKey =
 ```
 
 **3.推送设置**
 
-* 推送目前设置了bark、dingding，如何配置自行查找方法。**默认关闭推送**，需要**开启推送**将 `pushServer` 修改为 `1` 即可，并且设置 `pushType` 为相应的推送方式。
+* 推送目前设置了bark、dingding，如何配置自行查找方法。**默认关闭推送**，需要**开启推送**将 `pushServer` 修改为 `1` ，并且设置 `pushType` 为相应的推送方式（bark / dingding）。
 
 ```
 # 推送设置
-pushServer = 0      # 推送开关，0为关闭，1为开启，默认关闭
-pushType = ""       # 选择推送方式，目前支持：bark、dingding
+[push]
+# 推送开关，0为关闭，1为开启，默认关闭
+pushServer = 0
+# 选择推送方式，目前支持：bark、dingding
+pushType =
 ```
 
 * bark推送
@@ -52,9 +54,12 @@ pushType = ""       # 选择推送方式，目前支持：bark、dingding
   bark推送需要设置服务地址以及在app上获取到的key值。
 
   ```
-  # bark data
-  bark_server_url = ""    # 示例：https://test.com
-  bark_key = ""           # 从bark app上获取
+  # 1. bark推送方式填写如下内容
+  [bark]
+  # 示例：https://test.com
+  bark_ServerUrl =
+  # 从bark app上获取
+  bark_Key =
   ```
 
 * dingding推送
@@ -62,26 +67,31 @@ pushType = ""       # 选择推送方式，目前支持：bark、dingding
   钉钉推送需要创建群机器人，安全选项选“加签”，获取到key值填入下`dingkey`即可，获取到加签的secret添如到`secret`。
 
   ```
-  # dingding data
-  access_token = ""        # webhook access_token值
-  secret = ""         # 安全选项选"加签"，secret值
+  # 2. dingding推送方式填写如下内容
+  [dingding]
+  # webhook access_token值
+  dingding_AccessToken =
+  # 安全选项选"加签"，secret值
+  dingding_Secret =
   ```
 
 ## 云函数配置
 
 **1.云函数配置**
 
-* 使用的某讯云函数，注册好之后，创建云函数—>从头开始—>事件函数—>**运行环境选择python3.6**—>**执行方法处写** `index.main` 。
-
+* 使用的阿某云函数，注册好之后，搜索**函数计算 FC**—>服务与函数—>创建服务—>服务名随便写，日志记录最好是开启
+* 进入服务后—>创建函数—>函数名自定义—>**运行环境选择python3.9**—>**执行方法处用默认** `index.handler` 即可。
+* 可以选择通过文件夹上传代码，将修改好config.conf配置文件后整个文件夹拖入上传窗口。
 * 高级配置中，将**超时时间设置为最长900s**。
 
-![yun](https://github.com/thunder-sec/T00lsSign/blob/main/yunhanshu.jpg?raw=true)
 
 **2.代码修改**
 
-* 因为云函数的原因，不需要引入`if __name__ == '__main__'`，所以直接将代码修改好放入云函数即可执行。
+* 因为默认是使用的云函数，所以代码中注释掉了`if __name__ == '__main__'`及以下的代码。
+* 如果不是使用的云函数，自行将如上注释的内容去掉注释直接执行即可。
 
 **3.设置定时触发任务**
 
-可自行设置触发时间，例如每天上午10点触发一次，cron表达式为：`0 0 10 * * * *`
+* 可自行设置触发时间，在触发器配置中，触发器类型选择：定时触发器。触发方式可以选择自定义
+* CRON表达式：例如每天上午10点触发一次，cron表达式为：`0 0 10 * * * *`
 
